@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { z } = require('zod');
+const path = require('path'); // 🟢 FIX 1: THIS LINE PREVENTS THE CRASH
+
 const scriptPath = path.join(__dirname, './scripts/ph_detector.py');
 
 // --- Import Custom Services & Models ---
@@ -141,4 +143,5 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch(err => console.error('DB Connection Error:', err));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Master Server running on port ${PORT}`));
+// 🟢 FIX 2: ADD '0.0.0.0' FOR DOCKER NETWORKING
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 Master Server running on port ${PORT}`));
