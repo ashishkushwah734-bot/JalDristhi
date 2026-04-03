@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { z } = require('zod');
+const scriptPath = path.join(__dirname, './scripts/ph_detector.py');
 
 // --- Import Custom Services & Models ---
 const Report = require('./models/Report');
