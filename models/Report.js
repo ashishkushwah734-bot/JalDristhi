@@ -5,6 +5,14 @@ const ReportSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
+  aadharNumber: { 
+    type: String,
+    default: 'Not Provided'
+  },
+  landmark: {
+    type: String,
+    default: 'Not Provided'
+  },
   issueType: { 
     type: String, 
     enum: ['Leak', 'Clogging', 'Waterlogging', 'Water Quality'], 

@@ -25,6 +25,8 @@ const otps = {};
 // --- Zod Validation Blueprint ---
 const reportValidationSchema = z.object({
   reporterName: z.string().min(2, "Name must be at least 2 characters"),
+  aadharNumber: z.string().optional(),
+  landmark: z.string().optional(),
   issueType: z.enum(['Leak', 'Clogging', 'Waterlogging', 'Water Quality']),
   location: z.object({
     latitude: z.number(),
@@ -101,6 +103,8 @@ app.post('/submit-report', async (req, res) => {
 
     const newReport = new Report({
       reporterName: validatedData.reporterName,
+      aadharNumber: validatedData.aadharNumber,
+      landmark: validatedData.landmark,
       issueType: validatedData.issueType,
       location: validatedData.location,
       imageUrl: validatedData.imageUrl,
