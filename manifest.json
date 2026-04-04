@@ -1,0 +1,18 @@
+{
+  "name": "Jal Drishti",
+  "short_name": "Jal Drishti",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait",
+  "description": "App to report and analyze water issues securely.",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'><path fill='%230ea5e9' d='M192 512C85.96 512 0 426.04 0 320C0 228.8 130.2 57.31 181.5 14.23C187.3 9.3 196.7 9.3 202.5 14.23C253.8 57.31 384 228.8 384 320C384 426.04 298.04 512 192 512z'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

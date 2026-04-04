@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0ea5e9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Jal Drishti">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%230ea5e9' d='M12 2c0 0-6 5-6 11c0 3.3 2.7 6 6 6s6-2.7 6-6c0-6-6-11-6-11z'/></svg>">
+    <title>Jal Drishti - Issue Reporter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- ===== AUTH SCREEN ===== -->
+        <div id="auth-screen" class="screen active auth-bg">
+            <div class="auth-card">
+                <!-- Header (Common) -->
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <i class="fa-solid fa-droplet"></i>
+                        <svg viewBox="0 0 24 24" class="smile-svg">
+                            <path d="M7 12c1.5 2 4.5 2 6 0" stroke="currentColor" stroke-width="2" fill="none"
+                                stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <h1 class="auth-title">Jal Drishti</h1>
+                    <p class="auth-hindi">जल दृष्टि</p>
+                    <p class="auth-tagline">Smart water monitoring for every citizen</p>
+                    <div class="auth-stepper">
+                        <span class="auth-dot active" id="dot-1"></span>
+                        <span class="auth-dot" id="dot-2"></span>
+                        <span class="auth-dot" id="dot-3"></span>
+                    </div>
+                </div>
+
+                <!-- STEP 1: MOBILE NUMBER -->
+                <div id="auth-step-1" class="auth-content active">
+                    <p class="auth-step-label">STEP 1 OF 2</p>
+                    <h2 class="auth-heading">Enter your mobile number</h2>
+                    <p class="auth-desc">We'll send a one-time password to verify your identity.</p>
+
+                    <div class="phone-input-wrapper">
+                        <div class="country-code"><b>IN</b> +91</div>
+                        <input type="tel" id="auth-phone-input" placeholder="98765 43210" maxlength="10">
+                    </div>
+
+                    <button id="btn-send-otp" class="btn-auth">Send OTP</button>
+
+                    <div class="auth-footer-link">
+                        New user? <a href="#" id="link-register">Create account &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- STEP 2: VERIFY OTP -->
+                <div id="auth-step-2" class="auth-content" style="display: none;">
+                    <p class="auth-step-label">STEP 2 OF 2</p>
+                    <h2 class="auth-heading">Verify your number</h2>
+                    <p class="auth-desc">Enter the 6-digit OTP sent to</p>
+
+                    <div class="otp-number-display">
+                        <i class="fa-solid fa-phone"></i>
+                        <span id="display-phone-num">+91 91010 16322</span>
+                        <a href="#" id="auth-change-num">Change</a>
+                    </div>
+
+                    <div class="otp-inputs-grid">
+                        <input type="text" class="otp-box" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                        <input type="text" class="otp-box" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                        <input type="text" class="otp-box" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                        <input type="text" class="otp-box" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                        <input type="text" class="otp-box" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                        <input type="text" class="otp-box" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                    </div>
+
+                    <p class="resend-text">Resend OTP in <b>16</b>s</p>
+
+                    <div class="demo-otp-note">
+                        <i class="fa-solid fa-wrench"></i> Demo mode — OTP is <b>123456</b><br>
+                        <span>(In production, this is sent via SMS)</span>
+                    </div>
+
+                    <button id="btn-verify-otp" class="btn-auth">Verify & Login</button>
+                </div>
+
+                <!-- STEP 3: SUCCESS LOGGED IN -->
+                <div id="auth-step-3" class="auth-content" style="display: none;">
+                    <br>
+                    <div class="success-tick-circle">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h2 class="auth-heading text-center">You're verified!</h2>
+                    <p class="auth-desc text-center">Welcome to Jal Drishti.<br>Redirecting to your dashboard...</p>
+
+                    <div class="loader-wrap">
+                        <div class="auth-spinner"></div>
+                        <span>Loading dashboard</span>
+                    </div>
+                </div>
+
+                <!-- REGISTRATION SCREEN -->
+                <div id="auth-step-register" class="auth-content" style="display: none;">
+                    <div class="reg-badge">
+                        <i class="fa-regular fa-circle-check"></i> Citizen Registration Portal
+                    </div>
+                    <h2 class="auth-heading">Create your account</h2>
+                    <p class="auth-desc" style="margin-bottom: 20px;">Register to access water services in your area</p>
+
+                    <div class="reg-form-group">
+                        <label class="reg-label">Full name</label>
+                        <div class="input-with-icon">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" id="reg-name" placeholder="Enter your full name">
+                        </div>
+                    </div>
+
+                    <div class="reg-form-group">
+                        <label class="reg-label">Aadhaar card number</label>
+                        <div class="input-with-icon">
+                            <i class="fa-regular fa-address-card"></i>
+                            <input type="text" id="reg-aadhaar" placeholder="XXXX XXXX XXXX" maxlength="14" pattern="[0-9 ]*">
+                        </div>
+                        <p class="reg-subtext">12-digit Aadhaar number — used for identity verification</p>
+                    </div>
+
+                    <div class="reg-form-group">
+                        <label class="reg-label" style="margin-bottom: 8px;">Address</label>
+                        <div class="addr-toggles">
+                            <button type="button" class="addr-toggle-btn active" id="btn-manual-addr"><span class="toggle-dot"></span> Type manually</button>
+                            <button type="button" class="addr-toggle-btn" id="btn-live-addr"><span class="toggle-dot"></span> Use live location</button>
+                        </div>
+                        <textarea id="reg-address" class="reg-textarea" placeholder="House/Flat No., Street, Village/City, District, State, PIN"></textarea>
+                    </div>
+
+                    <button id="btn-register-submit" class="btn-auth" style="margin-top: 10px;">Register & continue &rarr;</button>
+
+                    <div class="auth-footer-link" style="padding-top: 16px;">
+                        Already registered? <a href="#" id="link-sign-in">Sign In &rarr;</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== HOME DASHBOARD SCREEN ===== -->
+        <div id="home-screen" class="screen">
+            <!-- Top Header -->
+            <div class="home-topbar" style="padding: 16px 20px;">
+                <!-- PhonePe style square profile icon with scanner overlay -->
+                <div class="user-profile-logo">
+                    <div class="main-logo-box" id="profile-logo-box">
+                        <i class="fa-solid fa-asterisk" id="profile-icon-inner"></i>
+                    </div>
+                    <div class="scan-badge">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </div>
+                </div>
+
+                <!-- App Context Title -->
+                <div class="topbar-center" style="flex:1; margin-left:16px; display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="font-size:1.15rem; font-weight:800; color:var(--primary-dark); letter-spacing:-0.5px; margin: 0; line-height: 1.2;">
+                        Jal Drishti</h3>
+                    <div id="topbar-user-info" style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; display: none; align-items: center; gap: 4px; margin-top: 2px;">
+                        <i class="fa-solid fa-user-check" style="color: #10b981;"></i> <span id="topbar-user-text">Account</span>
+                    </div>
+                </div>
+
+                <!-- Info/Help Icon -->
+                <div class="topbar-info-btn">
+                    <i class="fa-regular fa-circle-question"></i>
+                </div>
+            </div>
+
+            <!-- Ads / promotional carousel -->
+            <div class="ads-carousel-wrapper">
+                <div class="ads-carousel">
+                    <!-- Ad 1: Original Report & Protect -->
+                    <div class="home-banner ad-card">
+                        <div class="banner-text">
+                            <p class="banner-eyebrow">Water Issue?</p>
+                            <p class="banner-heading">Report &amp; Protect</p>
+                            <p class="banner-desc">Help your community report water problems in real time.</p>
+                            <button id="btn-report-issue" class="btn btn-primary btn-sm"
+                                style="margin-top:12px; width:auto; padding:10px 20px;">
+                                <i class="fa-solid fa-camera"></i> Report Now
+                            </button>
+                        </div>
+                        <i class="fa-solid fa-droplet banner-drop-icon"></i>
+                    </div>
+
+                    <!-- Ad 2: Save Water Campaign -->
+                    <div class="home-banner ad-card"
+                        style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <div class="banner-text">
+                            <p class="banner-eyebrow">New Campaign</p>
+                            <p class="banner-heading">Save Every Drop</p>
+                            <p class="banner-desc">Join the nationwide movement to conserve water daily.</p>
+                            <button class="btn btn-primary btn-sm"
+                                style="margin-top:12px; width:auto; padding:10px 20px; background: rgba(255,255,255,0.25); color:white; border:none;">
+                                Know More
+                            </button>
+                        </div>
+                        <i class="fa-solid fa-leaf banner-drop-icon"></i>
+                    </div>
+
+                    <!-- Ad 3: pH Guide -->
+                    <div class="home-banner ad-card"
+                        style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);">
+                        <div class="banner-text">
+                            <p class="banner-eyebrow">AI Feature</p>
+                            <p class="banner-heading">Check pH Level</p>
+                            <p class="banner-desc">Detect water acidity/alkalinity using our AI camera tool.</p>
+                            <button class="btn btn-primary btn-sm" id="btn-ad-ph"
+                                style="margin-top:12px; width:auto; padding:10px 20px; background: rgba(255,255,255,0.25); color:white; border:none;">
+                                <i class="fa-solid fa-microscope"></i> Detect pH
+                            </button>
+                        </div>
+                        <i class="fa-solid fa-vial banner-drop-icon"></i>
+                    </div>
+                </div>
+                <div class="carousel-dots">
+                    <span class="carousel-dot active"></span>
+                    <span class="carousel-dot"></span>
+                    <span class="carousel-dot"></span>
+                </div>
+            </div>
+
+            <!-- PhonePe Section 1: Circular Action Grid -->
+            <div class="home-section" style="padding-top:8px;">
+                <div class="home-section-title" style="margin-bottom: 16px; font-size: 1rem;">Core Features</div>
+                <div class="action-row-circular">
+                    <div class="action-item-circ" id="tile-report">
+                        <div class="circ-icon" style="background:#0ea5e9;"><i class="fa-solid fa-camera"></i></div>
+                        <span>Report Issue</span>
+                    </div>
+                    <div class="action-item-circ" id="tile-ph">
+                        <div class="circ-icon" style="background:#4f46e5;"><i class="fa-solid fa-microscope"></i></div>
+                        <span>pH Detect</span>
+                    </div>
+                    <div class="action-item-circ" id="tile-map">
+                        <div class="circ-icon" style="background:#10b981;"><i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <span>Map View</span>
+                    </div>
+                    <div class="action-item-circ" id="tile-quality">
+                        <div class="circ-icon" style="background:#06b6d4;"><i class="fa-solid fa-flask-vial"></i></div>
+                        <span>Water Quality</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhonePe Style Mini Promo Banner -->
+            <div class="home-section" style="padding-top:0;">
+                <div class="mini-promo-banner" id="home-mini-alert-1">
+                    <div class="mp-left">
+                        <div class="mp-icon"><i class="fa-solid fa-percent"></i></div>
+                        <span>Active Alert: High Contamination nearby!</span>
+                    </div>
+                    <div class="mp-right">
+                        <span>View</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhonePe Section 2: Square Logs/Updates Grid -->
+            <div class="home-section" style="padding-top:4px;">
+                <div class="home-section-title" style="margin-bottom: 16px; font-size: 1rem;">Updates & Logs</div>
+                <div class="action-row-square">
+                    <div class="action-item-sq" id="tile-alerts">
+                        <div class="sq-icon" style="color:#ef4444;"><i class="fa-solid fa-bell"></i></div>
+                        <span>Alerts</span>
+                    </div>
+                    <div class="action-item-sq" id="tile-history">
+                        <div class="sq-icon" style="color:#f59e0b;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        <span>History</span>
+                    </div>
+                    <div class="action-item-sq" id="home-mini-alert-2">
+                        <div class="sq-icon" style="color:#eab308;"><i class="fa-solid fa-droplet-slash"></i></div>
+                        <span>Warnings</span>
+                    </div>
+                    <div class="action-item-sq">
+                        <div class="sq-icon" style="color:#8b5cf6;"><i class="fa-solid fa-users"></i></div>
+                        <span>Community</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== REPORT ISSUE SCREEN ===== -->
+        <div id="report-screen" class="screen">
+            <div class="top-bar">
+                <button id="btn-back" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2>New Report</h2>
+                <div style="width: 40px;"></div>
+            </div>
+            <div class="form-content">
+                <!-- Camera / Image Section -->
+                <div class="image-capture-section">
+                    <div id="camera-container" class="camera-container">
+                        <video id="camera-preview" autoplay playsinline></video>
+                        <canvas id="canvas-snapshot" style="display: none;"></canvas>
+                        <img id="photo-preview" style="display: none;" alt="Captured photo preview" />
+                        <div class="camera-overlay">
+                            <button id="btn-capture" class="btn-capture"></button>
+                            <button id="btn-switch-cam"
+                                style="position: absolute; right: 15px; bottom: 15px; background: rgba(0,0,0,0.6); color: white; border: none; padding: 8px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; display: none;"><i
+                                    class="fa-solid fa-camera-rotate"></i> Switch</button>
+                        </div>
+                    </div>
+                    <div class="photo-actions" id="photo-actions" style="display: none;">
+                        <button id="btn-retake" class="btn btn-secondary btn-sm"><i class="fa-solid fa-rotate-left"></i>
+                            Retake</button>
+                    </div>
+                    <p style="text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 8px;">
+                        Capturing live from your device's camera.
+                    </p>
+                    <div style="text-align: center; margin-top: 10px;" id="upload-container">
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        <button type="button" id="btn-upload" class="btn btn-secondary btn-sm"
+                            onclick="document.getElementById('image-upload').click();">
+                            <i class="fa-solid fa-upload"></i> Upload from Device
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Water pH Analysis Section -->
+                <div class="form-group" id="ph-section" style="display: none;">
+                    <label>Approximate Water pH Analysis</label>
+                    <div class="location-box"
+                        style="display: block; text-align: center; margin-bottom: 12px; padding: 24px 16px;">
+                        <button id="btn-detect-ph" type="button" class="btn btn-primary btn-sm btn-full"
+                            style="margin-bottom: 12px; background-color: #4f46e5; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);"
+                            disabled>
+                            <i class="fa-solid fa-camera"></i> Capture photo first to Detect Approx pH
+                        </button>
+                        <div id="ph-result-container" style="display: none;">
+                            <div style="font-size: 3.2rem; font-weight: 800; color: var(--text-primary); line-height: 1; margin-bottom: 4px;"
+                                id="ph-value">--</div>
+                            <div id="ph-status"
+                                style="font-weight: 600; font-size: 1.05rem; margin-top: 8px; color: var(--text-secondary);">
+                                Analyzing water content...</div>
+                            <div id="color-swatch"
+                                style="width: 100%; height: 12px; border-radius: 6px; margin-top: 20px; background: #e2e8f0; border: 1px solid rgba(0,0,0,0.1);">
+                            </div>
+                            <input type="hidden" id="ph-hidden-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GPS Location Section -->
+                <div class="form-group">
+                    <label>Location</label>
+                    <div class="location-box" style="margin-bottom: 12px;">
+                        <div class="location-status" id="location-status">
+                            <i class="fa-solid fa-location-dot blink"></i> Auto GPS Fetching...
+                        </div>
+                        <input type="hidden" id="latitude">
+                        <input type="hidden" id="longitude">
+                    </div>
+                    <button id="btn-view-map" type="button" class="btn btn-secondary btn-full btn-sm">
+                        <i class="fa-solid fa-map-location-dot"></i> View Map &amp; Adjust
+                    </button>
+                    <div id="map-container"
+                        style="display: none; margin-top: 12px; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: relative;">
+                        <button id="btn-live-location" type="button" class="btn btn-primary"
+                            title="Detect Live Location"
+                            style="position: absolute; bottom: 16px; right: 16px; z-index: 10; border-radius: 50%; width: 44px; height: 44px; padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; background-color: white; color: #0ea5e9; border: 2px solid #0ea5e9;">
+                            <i class="fa-solid fa-location-crosshairs" style="font-size: 1.2rem;"></i>
+                        </button>
+                        <div id="address-display"
+                            style="padding: 12px; font-size: 0.9rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 500;">
+                            Address will appear here...
+                        </div>
+                        <div id="map" style="height: 200px; width: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Issue Type Section -->
+                <div class="form-group">
+                    <label for="issue-type">Select Issue Type</label>
+                    <div class="custom-select">
+                        <select id="issue-type" required>
+                            <option value="" disabled selected>Select an issue from the list...</option>
+                            <option value="leakage">Pipeline Leakage</option>
+                            <option value="contamination">Contaminated / Polluted Water</option>
+                            <option value="drainage">Blocked / Overflowing Drainage</option>
+                            <option value="wastage">Water Wastage / Open Tap</option>
+                            <option value="pump_failure">Handpump/Motor Failure</option>
+                            <option value="other">Other Water Issues</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Description Section -->
+                <div class="form-group">
+                    <label for="description">Add Description (Optional)</label>
+                    <textarea id="description" rows="3"
+                        placeholder="Provide additional details about the location or type of issue..."></textarea>
+                </div>
+
+                <!-- Reference Image Section -->
+                <div class="form-group">
+                    <label>Add Reference Image (Optional)</label>
+                    <div
+                        style="text-align: center; margin-bottom: 12px; padding: 16px; border: 2px dashed #cbd5e1; border-radius: 8px; background: #f8fafc;">
+                        <img id="ref-photo-preview"
+                            style="display: none; width: 100%; border-radius: 8px; margin-bottom: 10px;" alt="Reference image preview" />
+                        <input type="file" id="ref-image-upload" accept="image/*" style="display: none;">
+                        <button type="button" id="btn-ref-upload" class="btn btn-secondary btn-sm"
+                            onclick="document.getElementById('ref-image-upload').click();">
+                            <i class="fa-solid fa-image"></i> Upload Reference Image
+                        </button>
+                    </div>
+                </div>
+
+                <div class="submit-container">
+                    <button id="btn-submit" class="btn btn-primary btn-full">Submit Report</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ALERTS SCREEN ===== -->
+        <div id="alerts-screen" class="screen">
+            <div class="top-bar">
+                <button class="icon-btn" id="btn-alerts-back"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2>Water Alerts</h2>
+                <div style="width:40px;"></div>
+            </div>
+            <div class="alerts-list">
+                <div class="alert-card-full alert-critical">
+                    <div class="acf-header">
+                        <span class="acf-badge acf-badge-critical"><i class="fa-solid fa-circle-exclamation"></i>
+                            Critical</span>
+                        <span class="acf-time">2h ago</span>
+                    </div>
+                    <div class="acf-title">High Contamination Detected</div>
+                    <div class="acf-body">Severe water pollution detected near Yamuna River bank. Do not use water for
+                        drinking or cooking.</div>
+                    <div class="acf-meta"><i class="fa-solid fa-location-dot"></i> Delhi, Okhla</div>
+                </div>
+
+                <div class="alert-card-full alert-warning">
+                    <div class="acf-header">
+                        <span class="acf-badge acf-badge-warning"><i class="fa-solid fa-triangle-exclamation"></i>
+                            Warning</span>
+                        <span class="acf-time">5h ago</span>
+                    </div>
+                    <div class="acf-title">pH Level Abnormal (4.2 – Acidic)</div>
+                    <div class="acf-body">Water pH recorded at 4.2 in Sector 12. Highly acidic — avoid direct
+                        consumption. Civic team alerted.</div>
+                    <div class="acf-meta"><i class="fa-solid fa-location-dot"></i> Noida, Sector 12</div>
+                </div>
+
+                <div class="alert-card-full alert-info">
+                    <div class="acf-header">
+                        <span class="acf-badge acf-badge-info"><i class="fa-solid fa-circle-info"></i> Info</span>
+                        <span class="acf-time">1d ago</span>
+                    </div>
+                    <div class="acf-title">Pipeline Leakage Reported</div>
+                    <div class="acf-body">Multiple citizen reports of water leakage near Main Road junction. Municipal
+                        authorities have been notified.</div>
+                    <div class="acf-meta"><i class="fa-solid fa-location-dot"></i> Gurgaon, MG Road</div>
+                </div>
+
+                <div class="alert-card-full alert-info">
+                    <div class="acf-header">
+                        <span class="acf-badge acf-badge-info"><i class="fa-solid fa-circle-info"></i> Info</span>
+                        <span class="acf-time">2d ago</span>
+                    </div>
+                    <div class="acf-title">Handpump Failure – Village Block 4</div>
+                    <div class="acf-body">Primary handpump in Village Block 4 reported non-functional. Temporary supply
+                        arranged by authorities.</div>
+                    <div class="acf-meta"><i class="fa-solid fa-location-dot"></i> Faridabad, Block 4</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== HISTORY SCREEN ===== -->
+        <div id="history-screen" class="screen">
+            <div class="top-bar">
+                <button class="icon-btn" id="btn-history-back"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2>My Reports</h2>
+                <div style="width:40px;"></div>
+            </div>
+            <div class="history-list" id="history-list">
+                <div class="history-empty">
+                    <i class="fa-solid fa-clock-rotate-left history-empty-icon"></i>
+                    <p>No reports yet</p>
+                    <small>Your submitted water issue reports will appear here.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== APP INFO SCREEN ===== -->
+        <div id="info-screen" class="screen">
+            <div class="top-bar">
+                <button class="icon-btn" id="btn-info-back"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2>App Information</h2>
+                <div style="width:40px;"></div>
+            </div>
+            <div class="info-content" style="padding: 24px 20px; overflow-y: auto; flex: 1;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div
+                        style="width:70px; height:70px; background:var(--primary-color); border-radius:20px; display:inline-flex; align-items:center; justify-content:center; color:white; font-size:2rem; box-shadow:0 8px 24px rgba(14,165,233,0.3); margin-bottom: 16px;">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                    <h3
+                        style="font-size: 1.6rem; font-weight: 800; color: var(--primary-dark); letter-spacing: -0.5px;">
+                        Jal Drishti</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top:4px;">Version 1.0.0</p>
+                </div>
+
+                <div class="info-card"
+                    style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; margin-bottom: 16px;">
+                    <h4 style="font-size: 1.05rem; margin-bottom: 10px; color: var(--text-primary);"><i
+                            class="fa-solid fa-bullseye" style="color: var(--primary-color); margin-right: 6px;"></i>
+                        Our Mission</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">Jal Drishti empowers
+                        communities to protect local water bodies. Our platform enables citizens to instantly report
+                        water contamination, leakage, or resource mismanagement to localized authorities.</p>
+                </div>
+
+                <div class="info-card"
+                    style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; margin-bottom: 16px;">
+                    <h4 style="font-size: 1.05rem; margin-bottom: 16px; color: var(--text-primary);"><i
+                            class="fa-solid fa-layer-group" style="color: var(--primary-color); margin-right: 6px;"></i>
+                        Key Features</h4>
+                    <ul
+                        style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+                        <li style="margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;">
+                            <i class="fa-solid fa-camera"
+                                style="color: var(--primary-color); font-size: 1rem; margin-top:2px; flex-shrink:0;"></i>
+                            <span><b>Media Reporting:</b> Snap real-time photos and geolocations of water issues
+                                directly to our encrypted servers.</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;">
+                            <i class="fa-solid fa-microscope"
+                                style="color: #4f46e5; font-size: 1rem; margin-top:2px; flex-shrink:0;"></i>
+                            <span><b>AI pH Detection:</b> Leverage AI processing to detect visual water acidity
+                                anomalies on-site.</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;">
+                            <i class="fa-solid fa-map-location-dot"
+                                style="color: #10b981; font-size: 1rem; margin-top:2px; flex-shrink:0;"></i>
+                            <span><b>Live Map:</b> View interactive heatmap vectors of reported issues in your active
+                                vicinity.</span>
+                        </li>
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <i class="fa-solid fa-bell"
+                                style="color: #ef4444; font-size: 1rem; margin-top:2px; flex-shrink:0;"></i>
+                            <span><b>Critical Alerts:</b> Receive instant push notifications about severe water hazards
+                                globally.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div
+                    style="text-align: center; margin-top: 36px; padding-bottom: 20px; opacity: 0.5; font-size: 0.75rem;">
+                    <p style="margin-bottom: 4px;">© 2026 Jal Drishti Platform.</p>
+                    <p>All Rights Reserved. MIT License.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUCCESS SCREEN ===== -->
+        <div id="success-screen" class="screen">
+            <div class="success-content">
+                <div class="success-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h2>Report Submitted!</h2>
+                <p>Thank you for submitting this report. The location details and image have been securely recorded.</p>
+                <button id="btn-home" class="btn btn-primary mt-4">Back to Home</button>
+            </div>
+        </div>
+        <!-- ===== BOTTOM NAVIGATION ===== -->
+        <nav class="bottom-nav hidden" id="bottom-nav">
+            <button class="nav-item active" id="nav-home">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" id="nav-map">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>Map</span>
+            </button>
+            <button class="nav-item nav-cam-wrapper" id="nav-camera">
+                <div class="nav-cam-btn">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <span>Scan</span>
+            </button>
+            <button class="nav-item" id="nav-alerts">
+                <div class="nav-icon-wrap">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="nav-badge" id="alert-badge">3</span>
+                </div>
+                <span>Alerts</span>
+            </button>
+            <button class="nav-item" id="nav-history">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>History</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- Application Logic -->
+    <script src="app.js"></script>
+    <!-- Google Maps API - Move API key to backend environment variable -->
+    <script>
+        // Initialize maps when API key is available from backend
+        window.initMapWithKey = function(apiKey) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap&v=weekly&libraries=marker`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        };
+    </script>
+    <!-- OpenCV.js for Image Processing -->
+    <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady();"
+        type="text/javascript"></script>
+</body>
+
+</html>

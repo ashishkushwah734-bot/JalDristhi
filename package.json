@@ -1,21 +1,36 @@
 {
+<<<<<<< HEAD
   "name": "jaldristhi",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+=======
+  "name": "code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+>>>>>>> f4bdbcb5c62d1e44b13d8369323f7f0faf84b0c9
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+<<<<<<< HEAD
     "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.0",
     "express": "^5.2.1",
     "mongoose": "^9.3.3",
     "zod": "^4.3.6"
+=======
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+>>>>>>> f4bdbcb5c62d1e44b13d8369323f7f0faf84b0c9
   }
 }
