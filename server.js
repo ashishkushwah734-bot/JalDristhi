@@ -204,9 +204,10 @@ app.post('/api/verify-otp', (req, res) => {
   res.status(400).json({ success: false, error: 'Invalid or expired OTP' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend server successfully running at http://localhost:${PORT}`);
-  console.log(`Waiting for Next JS / React to send OTP requests...`);
-});
+// 1. Tell Express to use Render's dynamic port, or fallback to 5000 locally
+const PORT = process.env.PORT || 5000;
 
->>>>>>> f4bdbcb5c62d1e44b13d8369323f7f0faf84b0c9
+// 2. Bind to '0.0.0.0' so the Docker container accepts outside traffic
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Master Server running on port ${PORT}`);
+});
