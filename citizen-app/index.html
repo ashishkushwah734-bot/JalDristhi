@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JalDristhi | Citizen Portal</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <div id="app-container">
+
+        <!-- SCREEN: AUTH (LOGIN) -->
+        <main id="screen-auth" class="screen active">
+            <div class="glass-card">
+                <div class="brand">
+                    <div class="logo-orb"></div>
+                    <h1>JalDristhi</h1>
+                    <p>Citizen Reporting Network</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="tel" id="mobile-input" placeholder="e.g. 9876543210" maxlength="10">
+                </div>
+                <button class="primary-btn" onclick="requestOTP()">Continue Security Setup</button>
+            </div>
+        </main>
+
+        <!-- SCREEN: OTP VERIFICATION -->
+        <main id="screen-otp" class="screen">
+            <div class="glass-card">
+                <h2>Verify Mobile</h2>
+                <p>We've sent a 4-digit security code to your device.</p>
+                
+                <!-- Sandbox Display (For Development/Demonstration as requested) -->
+                <div class="demo-otp-box">
+                    <span>Demo OTP: </span>
+                    <strong id="demo-otp-value">0000</strong>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" id="otp-input" placeholder="Enter 4-digit code" maxlength="4" style="text-align: center; letter-spacing: 5px; font-size: 20px;">
+                </div>
+                <button class="primary-btn" onclick="verifyOTP()">Verify Identity</button>
+                <button class="text-btn" onclick="navTo('screen-auth')">Back</button>
+            </div>
+        </main>
+
+        <!-- SCREEN: PROFILE CREATION -->
+        <main id="screen-profile" class="screen">
+            <div class="glass-card">
+                <h2>Create Citizen Profile</h2>
+                <p>Establishing your authenticated identity.</p>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="profile-name" placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Aadhaar Number <small>(Optional)</small></label>
+                    <input type="text" id="profile-aadhar" placeholder="xxxx-xxxx-xxxx">
+                </div>
+                <div class="form-group">
+                    <label>Home Address / Locale</label>
+                    <input type="text" id="profile-address" placeholder="New Delhi, Sector 4">
+                </div>
+
+                <button class="primary-btn" onclick="saveProfile()">Create Account</button>
+            </div>
+        </main>
+
+        <!-- SCREEN: DASHBOARD (HOME) -->
+        <main id="screen-dashboard" class="screen">
+            
+            <header class="dash-head">
+                <h2 id="welcome-text">Welcome, Citizen.</h2>
+                <p>Help us protect the water infrastructure.</p>
+            </header>
+
+            <div class="radar-container">
+                <div class="radar-circle">
+                    <button class="pulse-btn" onclick="openCameraWizard()">
+                        <span>+</span>
+                        Report Issue
+                    </button>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <p>Verified Identity</p>
+                <button class="text-btn" onclick="logout()" style="color:var(--accent-warning)">Log Out</button>
+            </div>
+        </main>
+
+        <!-- SCREEN: REPORT WIZARD -->
+        <main id="screen-report" class="screen">
+            <header class="wizard-header">
+                <button class="back-btn" onclick="navTo('screen-dashboard')">←</button>
+                <h2>New Report</h2>
+            </header>
+
+            <div class="scroll-body">
+                <!-- Media Intake -->
+                <div class="media-container" id="media-box">
+                    <video id="camera-feed" autoplay playsinline></video>
+                    <canvas id="photo-canvas" style="display:none;"></canvas>
+                    <img id="photo-preview" style="display:none;">
+                    
+                    <div class="camera-controls">
+                        <button id="capture-btn" onclick="snapPhoto()">Snap Photo</button>
+                        <button class="alt-btn" onclick="document.getElementById('file-upload').click()">Upload File</button>
+                        <input type="file" id="file-upload" accept="image/*" style="display:none;" onchange="handleFileUpload(event)">
+                    </div>
+                </div>
+
+                <!-- Form Intake -->
+                <div class="report-form" id="report-form-box" style="display:none;">
+                    <div class="form-group">
+                        <label>Category of Issue</label>
+                        <select id="issue-type">
+                            <option value="Leak">Pipeline Leakage</option>
+                            <option value="Water Contamination">Water Contamination</option>
+                            <option value="Clogging">Drain Clogging</option>
+                            <option value="Waterlogging">Street Waterlogging</option>
+                            <option value="Other">Other / Custom</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Issue Description</label>
+                        <textarea id="issue-desc" placeholder="Describe what you see in the photo..." rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nearest Landmark (GPS is automatic)</label>
+                        <input type="text" id="issue-landmark" placeholder="e.g. Next to Central Park gate">
+                    </div>
+
+                    <button class="primary-btn" id="submit-report-btn" onclick="submitFinalReport()">
+                        Submit to Command Center
+                    </button>
+                </div>
+                
+                <!-- Loading State overlay -->
+                <div id="loading-overlay" class="loading-overlay" style="display:none;">
+                    <div class="spinner"></div>
+                    <p id="loading-text">Analyzing evidence...</p>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Logic Engine -->
+    <script src="app.js"></script>
+</body>
+</html>

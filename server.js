@@ -18,6 +18,7 @@ const app = express();
 app.use(cors()); // Allows Ashu's React app to connect
 app.use(express.json()); // Allows server to read JSON bodies
 app.use('/', express.static(path.join(__dirname, 'public'))); // Serve Official Dashboard
+app.use('/citizen', express.static(path.join(__dirname, 'citizen-app'))); // Serve Citizen App
 
 // --- In-memory store for OTPs (for testing only) ---
 const otps = {};
@@ -27,6 +28,7 @@ const reportValidationSchema = z.object({
   reporterName: z.string().min(2, "Name must be at least 2 characters"),
   aadharNumber: z.string().optional(),
   landmark: z.string().optional(),
+  description: z.string().optional(),
   issueType: z.enum(['Leak', 'Clogging', 'Waterlogging', 'Water Quality']),
   location: z.object({
     latitude: z.number(),
@@ -105,6 +107,7 @@ app.post('/submit-report', async (req, res) => {
       reporterName: validatedData.reporterName,
       aadharNumber: validatedData.aadharNumber,
       landmark: validatedData.landmark,
+      description: validatedData.description,
       issueType: validatedData.issueType,
       location: validatedData.location,
       imageUrl: validatedData.imageUrl,

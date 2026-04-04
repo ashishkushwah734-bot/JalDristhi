@@ -18,6 +18,10 @@ const ReportSchema = new mongoose.Schema({
     enum: ['Leak', 'Clogging', 'Waterlogging', 'Water Quality'], 
     required: true 
   },
+  description: {
+    type: String,
+    default: 'No description provided'
+  },
   location: {
     latitude: { type: Number, required: true },
     longitude: { type: Number, required: true },
