@@ -8,7 +8,14 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
  * into a format that Gemini Vision can understand (Base64).
  */
 async function urlToGenerativePart(url) {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            "User-Agent": "JalDristhi-App/1.0"
+        }
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+    }
     const buffer = await response.arrayBuffer();
     return {
         inlineData: {
@@ -26,7 +33,7 @@ const analyzeImage = async (imageUrl) => {
         // 1. Initialize the fastest, most cost-effective vision model
         // We force it to return JSON so your server.js doesn't crash parsing text.
         const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
+            model: "gemini-2.5-flash",
             generationConfig: { responseMimeType: "application/json" }
         });
 
@@ -38,7 +45,7 @@ const analyzeImage = async (imageUrl) => {
             You are a strict, expert civic infrastructure AI validator working for the JalDristhi government portal.
             Your ONLY job is to analyze this image and determine if it shows a genuine water-related infrastructure issue.
             
-            Valid categories: 'Leak', 'Clogging', 'Waterlogging', 'Water Quality'.
+            Valid categories: 'Leak', 'Clogging', 'Waterlogging', 'Water Quality', 'blocked drainage', 'open tap', 'handpump/Motor Failure'.
             
             RULES:
             1. If the image is a selfie, a meme, a random landscape, a screenshot, or unrelated to water infrastructure, REJECT IT.

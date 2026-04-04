@@ -1,0 +1,232 @@
+:root {
+    --bg-overlay: rgba(10, 15, 30, 0.75);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
+    --text-secondary: #a0a8b9;
+    --accent-blue: #00d2ff;
+    --accent-warning: #ff3b30;
+    --font-head: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background-color: #050810;
+}
+
+/* 1. Leaflet Underlay */
+#map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Lowest layer */
+}
+
+/* 2. Glassmorphism UI Container */
+#ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    pointer-events: none; /* Let map clicks through where UI isn't */
+    display: flex;
+    justify-content: flex-start;
+}
+
+#sidebar {
+    width: 380px;
+    height: 100%;
+    background: var(--bg-overlay);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border-color);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    pointer-events: auto; /* Enable clicking on sidebar */
+    box-shadow: 15px 0 30px rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
+}
+
+/* Scrollbar aesthetics */
+#sidebar::-webkit-scrollbar { width: 6px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+
+/* 3. Branding */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.glowing-orb {
+    width: 16px;
+    height: 16px;
+    background-color: var(--accent-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--accent-blue);
+    animation: orb-pulse 2s infinite alternate;
+}
+@keyframes orb-pulse {
+    0% { box-shadow: 0 0 10px var(--accent-blue), 0 0 20px var(--accent-blue); }
+    100% { box-shadow: 0 0 5px var(--accent-blue), 0 0 10px var(--accent-blue); }
+}
+
+.brand h1 {
+    font-family: var(--font-head);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+.brand p {
+    font-size: 13px;
+    color: var(--accent-blue);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 4. Metrics Grid */
+.metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.metric-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.metric-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.metric-card .label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.metric-card .value {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 600;
+}
+.metric-card .value.active { color: #00ff88; font-size: 16px; align-self: flex-start; margin-top: 4px; }
+.metric-card .value.error { color: var(--accent-warning); }
+
+.flashing-text {
+    animation: text-flash 1s infinite alternate;
+    color: var(--accent-blue) !important;
+}
+@keyframes text-flash {
+    from { opacity: 1; text-shadow: 0 0 10px var(--accent-blue); }
+    to { opacity: 0.4; }
+}
+
+/* 5. Feeds Section */
+.feed-section h2 {
+    font-family: var(--font-head);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+#feeds-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.feed-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--accent-blue);
+    padding: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.feed-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+.feed-card h4 { font-size: 14px; margin-bottom: 5px; color: #fff;}
+.feed-card span { font-size: 11px; color: var(--text-secondary); float: right;}
+.feed-card p { font-size: 13px; color: var(--text-secondary); }
+
+.new-feed-anim {
+    animation: slide-in 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+@keyframes slide-in {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* 6. Dynamic Markers & Flashing Beacon logic (Map Overrides) */
+.custom-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.beacon {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--text-secondary);
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+.beacon.leak { background-color: var(--accent-blue); border-color: #fff; }
+.beacon.clogging { background-color: #ffaa00; border-color: #fff;}
+.beacon.waterquality { background-color: #ff3b30; border-color: #fff; }
+
+.beacon.flashing {
+    background-color: #00ff88; /* High priority highlight color */
+    animation: marker-pulse 0.8s infinite alternate !important;
+}
+
+@keyframes marker-pulse {
+    from { 
+        transform: scale(1);
+        box-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
+    }
+    to { 
+        transform: scale(2);
+        box-shadow: 0 0 25px #00ff88, 0 0 50px #00ff88;
+        opacity: 0.8;
+    }
+}
+
+/* Leaflet Customization */
+.leaflet-popup-content-wrapper {
+    background: rgba(10, 15, 30, 0.95);
+    color: #fff;
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+}
+.leaflet-popup-tip { background: rgba(10, 15, 30, 0.95); border: 1px solid var(--border-color); border-top: none; border-left:none; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--text-secondary); }
+.popup-content h3 { color: var(--accent-blue); font-family: var(--font-head); margin-bottom: 8px; font-size: 16px;}
+.popup-content p { font-size: 13px; color: var(--text-secondary); margin: 4px 0;}
+.popup-content strong { color: #fff; }

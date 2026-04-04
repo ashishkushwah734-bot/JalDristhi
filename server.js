@@ -17,6 +17,7 @@ const app = express();
 // --- Middleware ---
 app.use(cors()); // Allows Ashu's React app to connect
 app.use(express.json()); // Allows server to read JSON bodies
+app.use('/', express.static(path.join(__dirname, 'public'))); // Serve Official Dashboard
 
 // --- In-memory store for OTPs (for testing only) ---
 const otps = {};
